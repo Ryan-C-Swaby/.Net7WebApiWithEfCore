@@ -16,34 +16,13 @@ namespace SuperHeroApi.Controllers
             _superHeroService = superHeroService;
         }
 
-        private static List<SuperHero> _superHeroes = new List<SuperHero>()
-        {
-            new SuperHero()
-            {
-                Id = 1,
-                Name = $"Batman",
-                FirstName = "Bruce",
-                LastName = "Wayne",
-                Place = "Gotham"
-            },
-            new SuperHero()
-            {
-                Id = 2,
-                Name = "Superman",
-                FirstName = "Clark",
-                LastName = "Kent",
-                Place = "Metropolis"
-            }
-        };
-
-
         [HttpGet]
         [Route("getall")]
         public async Task<IActionResult> GetAll()
         {
             var superHeroes = _superHeroService.GetAll();
 
-            return Ok(_superHeroes);
+            return Ok(superHeroes);
         }
 
         [HttpGet]
