@@ -40,6 +40,7 @@ namespace SuperHeroApi.Controllers
         }
 
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> Add(SuperHero newSuperHero)
         {
             _superHeroService.Add(newSuperHero);
@@ -48,6 +49,7 @@ namespace SuperHeroApi.Controllers
         }
 
         [HttpPut]
+        [Route("update")]
         public async Task<IActionResult> Update(SuperHero superHeroUpdate)
         {
             _superHeroService.Update(superHeroUpdate);
@@ -56,6 +58,7 @@ namespace SuperHeroApi.Controllers
         }
 
         [HttpDelete]
+        [Route("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             _superHeroService.Delete(id);

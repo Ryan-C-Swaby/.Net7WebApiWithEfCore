@@ -9,30 +9,25 @@ namespace SuperHeroApi.Services
 {
     public class SuperHeroService : ISuperHeroService
     {
-        private List<SuperHero> _superHeroes { get; set; }
-
-        public SuperHeroService()
+        private static List<SuperHero> _superHeroes = new List<SuperHero>()
         {
-            _superHeroes = new List<SuperHero>()
+            new SuperHero()
             {
-                new SuperHero()
-                {
-                    Id = 1,
-                    Name = $"Batman",
-                    FirstName = "Bruce",
-                    LastName = "Wayne",
-                    Place = "Gotham"
-                },
-                new SuperHero()
-                {
-                    Id = 2,
-                    Name = "Superman",
-                    FirstName = "Clark",
-                    LastName = "Kent",
-                    Place = "Metropolis"
-                }
-            };
-        }
+                Id = 1,
+                Name = $"Batman",
+                FirstName = "Bruce",
+                LastName = "Wayne",
+                Place = "Gotham"
+            },
+            new SuperHero()
+            {
+                Id = 2,
+                Name = "Superman",
+                FirstName = "Clark",
+                LastName = "Kent",
+                Place = "Metropolis"
+            }
+        };
 
         public List<SuperHero> GetAll()
         {
