@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SuperHeroApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace SuperHeroApi.Data
 {
     public class DataContext : DbContext
     {
+        public DataContext() : base()
+        {
+        }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         { 
 
@@ -19,5 +24,7 @@ namespace SuperHeroApi.Data
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=superherodb;Trusted_Connection=True;TrustServerCertificate=true");
         }
+
+        public DbSet<SuperHero> SuperHeroes { get; set; }
     }
 }

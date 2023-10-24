@@ -1,4 +1,6 @@
-﻿using SuperHeroApi.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperHeroApi.Data;
+using SuperHeroApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,73 +11,52 @@ namespace SuperHeroApi.Services
 {
     public class SuperHeroService : ISuperHeroService
     {
-        private static List<SuperHero> _superHeroes = new List<SuperHero>()
-        {
-            new SuperHero()
-            {
-                Id = 1,
-                Name = $"Batman",
-                FirstName = "Bruce",
-                LastName = "Wayne",
-                Place = "Gotham"
-            },
-            new SuperHero()
-            {
-                Id = 2,
-                Name = "Superman",
-                FirstName = "Clark",
-                LastName = "Kent",
-                Place = "Metropolis"
-            }
-        };
+        private readonly DataContext _context;
 
-        public List<SuperHero> GetAll()
+        public SuperHeroService(DataContext context) 
         {
-            return _superHeroes;
+            _context = context;
         }
 
-        public SuperHero? Get(int id)
+        public async Task<List<SuperHero>> GetAll()
         {
-            return _superHeroes.Where(x => x.Id == id).FirstOrDefault();
+            return await _context.SuperHeroes.ToListAsync();
         }
 
-        public void Add(SuperHero superHero)
+        public async Task<SuperHero?> Get(int id)
         {
-            int nextId = (_superHeroes.Max(x => x.Id) ?? 0) + 1;
+            var superHero = await _context.SuperHeroes.FindAsync(id);
 
-            superHero.Id = nextId;
-
-            _superHeroes.Add(superHero);
+            return superHero;
         }
 
-        public void Update(SuperHero superHeroUpdate)
+        public async Task Add(SuperHero superHero)
         {
-            var superHero = _superHeroes.Where(x => x.Id == superHeroUpdate.Id).FirstOrDefault();
-
-            if(superHero == null) 
-            {
-                throw new Exception($"Error updating super hero. Id: {superHeroUpdate.Id} not found.");
-            }
-
-            if (superHero != null)
-            {
-                superHero.Name = superHeroUpdate.Name;
-                superHero.FirstName = superHeroUpdate.FirstName;
-                superHero.LastName = superHeroUpdate.LastName;
-                superHero.Place = superHeroUpdate.Place;
-            }
+            await _context.SuperHeroes.AddAsync(superHero);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task<List<SuperHero>> Update(SuperHero superHero)
         {
-            var superHero = _superHeroes.Where(x =>x.Id == id).FirstOrDefault();   
-            
+            _context.SuperHeroes.Update(superHero);
+            await _context.SaveChangesAsync();
+
+            return await _context.SuperHeroes.ToListAsync();
+        }
+
+        public async Task<List<SuperHero>> Delete(int id)
+        {
+            var superHero = await _context.SuperHeroes.FindAsync(id);
+
             if(superHero == null)
             {
-                throw new Exception($"Error deleting super hero. No superhero found with id: {id}");
+                throw new Exception($"Error removing super hero. No super hero found for id: {id}");
             }
 
-            _superHeroes.Remove(superHero);
+            _context.Remove(superHero);
+            await _context.SaveChangesAsync();
+
+            return await _context.SuperHeroes.ToListAsync();
         }
     }
 }

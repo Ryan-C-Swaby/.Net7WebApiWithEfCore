@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SuperHeroApi.Data\SuperHeroApi.Data.csproj" />
     <ProjectReference Include="..\SuperHeroApi.Models\SuperHeroApi.Models.csproj" />
     <ProjectReference Include="..\SuperHeroApi.Services\SuperHeroApi.Services.csproj" />
   </ItemGroup>
