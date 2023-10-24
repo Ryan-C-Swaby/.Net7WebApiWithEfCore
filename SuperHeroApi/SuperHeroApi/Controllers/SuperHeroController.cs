@@ -62,6 +62,27 @@ namespace SuperHeroApi.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update(SuperHero superHeroUpdate)
+        {
+            var superHero = _superHeroes.Where(x => x.Id == superHeroUpdate.Id).FirstOrDefault();
+
+            if(superHero == null)
+            {
+                return NotFound($"No hero found with id {superHeroUpdate.Id}");
+            }
+
+            if (superHero != null)
+            {
+                superHero.Name = superHeroUpdate.Name;
+                superHero.FirstName = superHeroUpdate.FirstName;
+                superHero.LastName = superHeroUpdate.LastName;
+                superHero.Place= superHeroUpdate.Place;
+            }
+
+            return Ok();
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
