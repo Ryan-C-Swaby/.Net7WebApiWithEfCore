@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperHeroApi.Models;
+using SuperHeroApi.Services;
 
 namespace SuperHeroApi.Controllers
 {
@@ -8,6 +9,13 @@ namespace SuperHeroApi.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
+        private readonly ISuperHeroService _superHeroService;
+
+        public SuperHeroController(ISuperHeroService superHeroService)
+        {
+            _superHeroService = superHeroService;
+        }
+
         private static List<SuperHero> _superHeroes = new List<SuperHero>()
         {
             new SuperHero()
@@ -33,6 +41,8 @@ namespace SuperHeroApi.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetAll()
         {
+            var superHeroes = _superHeroService.GetAll();
+
             return Ok(_superHeroes);
         }
 
@@ -40,7 +50,7 @@ namespace SuperHeroApi.Controllers
         [Route("get{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var superHero = _superHeroes.Where(x => x.Id == id).FirstOrDefault();
+            var superHero = _superHeroService.Get(id);
 
             if (superHero == null)
             {
@@ -53,11 +63,7 @@ namespace SuperHeroApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(SuperHero newSuperHero)
         {
-            int? maxSuperHeroId = _superHeroes.Max(x => x.Id) + 1;
-
-            newSuperHero.Id = maxSuperHeroId;
-
-            _superHeroes.Add(newSuperHero);
+            _superHeroService.Add(newSuperHero);
 
             return Ok();
         }
@@ -65,20 +71,7 @@ namespace SuperHeroApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(SuperHero superHeroUpdate)
         {
-            var superHero = _superHeroes.Where(x => x.Id == superHeroUpdate.Id).FirstOrDefault();
-
-            if(superHero == null)
-            {
-                return NotFound($"No hero found with id {superHeroUpdate.Id}");
-            }
-
-            if (superHero != null)
-            {
-                superHero.Name = superHeroUpdate.Name;
-                superHero.FirstName = superHeroUpdate.FirstName;
-                superHero.LastName = superHeroUpdate.LastName;
-                superHero.Place= superHeroUpdate.Place;
-            }
+            _superHeroService.Update(superHeroUpdate);
 
             return Ok();
         }
@@ -86,14 +79,7 @@ namespace SuperHeroApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var superHero = _superHeroes.Where(x => x.Id!= id).FirstOrDefault();
-
-            if (superHero == null)
-            {
-                return BadRequest($"No super hero found with id: {id}");
-            }
-
-            _superHeroes.Remove(superHero);
+            _superHeroService.Delete(id);
 
             return Ok();
         }
